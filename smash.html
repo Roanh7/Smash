@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Smash Bros Moveset</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="moveset">
+        <!-- Titel -->
+        <div class="header">
+            <div class="arrow left" id="prev-character">⟨</div>
+            <div class="character-info">
+                <h1 id="character-name">Link</h1>
+                <h2 class="player-name">Played by: <strong>Surin</strong></h2>
+            </div>
+            <div class="arrow right" id="next-character">⟩</div>
+        </div>
+
+        <!-- Content: Character Image + Moves + Ultimate -->
+        <div class="content">
+            <!-- Afbeelding van het personage -->
+            <div class="character-image">
+                <img 
+                  id="character-skin" 
+                  src="https://www.smashbros.com/assets_v2/img/fighter/link/main.png" 
+                  alt="Link">
+            </div>
+
+            <!-- Normale Moves (wordt via script.js gevuld) -->
+            <div class="normal-moves">
+                <!-- Dynamisch gevuld -->
+            </div>
+
+            <!-- Final Smash -->
+            <div class="ultimate">
+                <!-- Deze icon blijft standaard paars -->
+                <div class="icon purple">B</div>
+                <div class="description">
+                    <!-- Tekst wordt door JavaScript bijgewerkt -->
+                    <h2>Final Smash: Ancient Bow and Arrow</h2>
+                    <p>Link shoots an Ancient Arrow that flies straight ahead...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
