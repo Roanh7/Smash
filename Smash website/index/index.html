@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smash Bros Ultimate - Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- LOADING SCREEN (Smash-logo animatie) -->
+    <div id="loading-screen">
+      <div class="loading-logo">
+        <!-- Een simpel Smash-logo, kan ook <img src="smash-logo.png"/> etc. -->
+        <div class="smash-logo"></div>
+        <p>Loading...</p>
+      </div>
+    </div>
+    
+    <!-- Achtergrond + smash-ball -->
+    <div class="background-animation"></div>
+    <div class="smash-ball"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <ul class="nav-links">
+            <li><a href="../index.html" class="active">Home</a></li>
+            <li><a href="../ranking/ranking.html">Ranking</a></li>
+            <li><a href="../player-info/player-info.html">Players</a></li>
+            <li><a href="../rules/rules.html">Rules</a></li>
+        </ul>
+    </nav>
+
+    <!-- Button voor nav popup -->
+    <button class="floating-nav" id="navToggle">☰</button>
+
+    <!-- CHALLENGER SILHOUETTES (links/rechts) -->
+    <div class="challenger-left"></div>
+    <div class="challenger-right"></div>
+
+    <!-- CONTAINER: Titel, Versus-bar, Buttons -->
+    <div class="container">
+        <!-- Titel met glitch-effect -->
+        <h1 class="title glitch-text">WELCOME TO SMASH BROS ULTIMATE</h1>
+
+        <div class="versus-bar animated-bar">
+            <span>CHALLENGERS APPROACHING!</span>
+        </div>
+
+        <div class="buttons">
+            <a href="../ranking/ranking.html" class="btn animated-btn">Ranking</a>
+            <a href="../player-info/player-info.html" class="btn animated-btn">Players</a>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="script.js"></script>
+</body>
+</html>
