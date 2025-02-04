@@ -1,41 +1,170 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Voorbeeld-data. Pas de waarden aan zoals je wilt.
-    const rankingData = [
-        { player: "Roan", points: 1, totalWins: 50 },
-        { player: "Jef", points: 3, totalWins: 45 },
-        { player: "Chip", points: 4, totalWins: 40 },
-        { player: "Taha", points: 2, totalWins: 35 },
-        { player: "Shah", points: 6, totalWins: 25 },
-        { player: "Surin", points: 5, totalWins: 35 },
-        { player: "Ricky", points: 7, totalWins: 35 },
-        { player: "Murat", points: 8, totalWins: 35 }
-    ];
-  
-    const rankingList = document.getElementById("ranking-list");
+ // 1) DOM-elementen
+ const rankingListEl = document.getElementById("ranking-list");
+ const adminUsername = document.getElementById("admin-username");
+ const adminPassword = document.getElementById("admin-password");
+ const loginButton   = document.getElementById("login-button");
+ const logoutButton  = document.getElementById("logout-button");
+ const adminPanel    = document.getElementById("admin-panel");
+ const winsNeededEl  = document.getElementById("winsNeeded");
+ const playersUpdateEl = document.getElementById("players-update");
+ const updateRankingBtn = document.getElementById("update-ranking-button");
 
-    // Sorteer op points aflopend (hoogste eerst):
-    rankingData.sort((a, b) => b.points - a.points);
+ // 2) Haal ranking op en render in de tabel
+ async function loadRanking() {
+   try {
+     const res = await fetch('/api/ranking');
+     const data = await res.json(); // { players: [...] }
+     const rankingData = data.players;
 
-    // Maak rijen in de tabel
-    rankingData.forEach((player, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${player.player}</td>
-            <td>${player.points}</td>
-            <td>${player.totalWins}</td>
-        `;
+     // Sorteer op points (aflopend)
+     rankingData.sort((a, b) => b.points - a.points);
 
-        // Top 3 => "out-of-tub", rest => "in-tub"
-        if (index < 3) {
-            row.classList.add("out-of-tub");
-        } else {
-            row.classList.add("in-tub");
-        }
+     // Maak de tabelcellen
+     rankingListEl.innerHTML = '';
+     rankingData.forEach((p, index) => {
+       const row = document.createElement("tr");
+       row.innerHTML = `
+           <td>${index + 1}</td>
+           <td>${p.player}</td>
+           <td>${p.points}</td>
+           <td>${p.totalWins}</td>
+       `;
 
-        // FadeInScale-animatie met wat vertraging
-        row.style.animation = `fadeInScale 0.5s ease-out ${index * 0.2}s forwards`;
+       // Top 3 => "out-of-tub", rest => "in-tub"
+       if (index < 3) {
+           row.classList.add("out-of-tub");
+       } else {
+           row.classList.add("in-tub");
+       }
 
-        rankingList.appendChild(row);
-    });
-});
+       // FadeInScale animatie
+       row.style.animation = `fadeInScale 0.5s ease-out ${index * 0.2}s forwards`;
+
+       rankingListEl.appendChild(row);
+     });
+   } catch (error) {
+     console.error("Fout bij het ophalen van de ranking:", error);
+   }
+ }
+
+ // 3) Login
+ loginButton.addEventListener('click', async () => {
+   const username = adminUsername.value;
+   const password = adminPassword.value;
+
+   try {
+     const res = await fetch('/api/login', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({ username, password })
+     });
+
+     if (res.ok) {
+       alert('Succesvol ingelogd als admin!');
+       adminPanel.style.display = 'block';
+       logoutButton.style.display = 'inline-block';
+       loginButton.style.display = 'none';
+       adminUsername.style.display = 'none';
+       adminPassword.style.display = 'none';
+
+       // Admin-panel voorbereiden
+       prepareAdminPanel();
+     } else {
+       alert('Ongeldige inloggegevens!');
+     }
+   } catch (err) {
+     console.error("Login-fout:", err);
+   }
+ });
+
+ // 4) Logout
+ logoutButton.addEventListener('click', async () => {
+   try {
+     const res = await fetch('/api/logout', { method: 'POST' });
+     if (res.ok) {
+       alert("Uitgelogd!");
+       adminPanel.style.display = 'none';
+       logoutButton.style.display = 'none';
+       loginButton.style.display = 'inline-block';
+       adminUsername.style.display = 'inline-block';
+       adminPassword.style.display = 'inline-block';
+     }
+   } catch (err) {
+     console.error("Logout-fout:", err);
+   }
+ });
+
+ // 5) Voorbereid adminpanel: Haal nogmaals data op en maak velden voor 'winsTonight'
+ async function prepareAdminPanel() {
+   try {
+     const res = await fetch('/api/ranking');
+     const data = await res.json();
+     const players = data.players;
+
+     // Leeg de div
+     playersUpdateEl.innerHTML = '';
+
+     players.forEach((player, index) => {
+       const div = document.createElement('div');
+       div.style.marginBottom = '10px';
+       div.innerHTML = `
+         <strong>${player.player}</strong> (huidige points: ${player.points}, totalWins: ${player.totalWins})
+         <br/>
+         <label>Wins vanavond:</label>
+         <input type="number" id="winsTonight-${index}" value="0" min="0" style="width:60px">
+       `;
+       playersUpdateEl.appendChild(div);
+     });
+   } catch (error) {
+     console.error("Fout bij het laden van admin panel data:", error);
+   }
+ }
+
+ // 6) Update ranking (POST /api/ranking/update)
+ updateRankingBtn.addEventListener('click', async () => {
+   try {
+     // 1. Huidige data ophalen
+     const res = await fetch('/api/ranking');
+     const data = await res.json();
+     const players = data.players;
+
+     // 2. winsNeeded uitlezen
+     const winsNeeded = parseInt(winsNeededEl.value);
+
+     // 3. Voor elke speler de input “winsTonight” ophalen + berekenen
+     players.forEach((player, index) => {
+       const winsTonightInput = document.getElementById(`winsTonight-${index}`);
+       const winsTonight = parseInt(winsTonightInput.value);
+
+       // Verhoog totalWins
+       player.totalWins += winsTonight;
+
+       // Als winsTonight >= winsNeeded => +1 point (of jouw eigen regels)
+       if (winsTonight >= winsNeeded) {
+         player.points += 1;
+       }
+     });
+
+     // 4. Nieuwe data naar de server sturen
+     const updateRes = await fetch('/api/ranking/update', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({ players })
+     });
+
+     if (updateRes.ok) {
+       alert("Ranking succesvol geüpdatet!");
+       // Ranking opnieuw laden om het resultaat te zien
+       loadRanking();
+       // Admin panel herladen
+       prepareAdminPanel();
+     } else {
+       alert("Fout bij het opslaan van de ranking.");
+     }
+   } catch (error) {
+     console.error("Update error:", error);
+   }
+ });
+
+ // 7) Laad de ranking zodra de pagina opent
+ document.addEventListener("DOMContentLoaded", loadRanking);

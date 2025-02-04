@@ -1,0 +1,44 @@
+{
+  "players": [
+    {
+      "player": "Roan",
+      "points": 2,
+      "totalWins": 13
+    },
+    {
+      "player": "Jef",
+      "points": 0,
+      "totalWins": 3
+    },
+    {
+      "player": "Chip",
+      "points": 1,
+      "totalWins": 6
+    },
+    {
+      "player": "Taha",
+      "points": 0,
+      "totalWins": 2
+    },
+    {
+      "player": "Shah",
+      "points": 1,
+      "totalWins": 5
+    },
+    {
+      "player": "Surin",
+      "points": 0,
+      "totalWins": 3
+    },
+    {
+      "player": "Ricky",
+      "points": 0,
+      "totalWins": 4
+    },
+    {
+      "player": "Murat",
+      "points": 0,
+      "totalWins": 4
+    }
+  ]
+}

@@ -22,6 +22,8 @@
         </ul>
     </nav>
     
+    
+
     <div class="container">
         <!-- Voeg "glitch-text" toe aan de title-klasse -->
         <h1 class="title glitch-text">RANKING LIST</h1>
@@ -42,6 +44,27 @@
             </table>
         </div>
     </div>
+
+    <!-- ADMIN-INLOG-SECTIE --> 
+    <div style="margin-top: 40px;">
+        <h2>Admin Login</h2>
+        <input type="text" id="admin-username" placeholder="Gebruikersnaam">
+        <input type="password" id="admin-password" placeholder="Wachtwoord">
+        <button id="login-button">Inloggen</button>
+        <button id="logout-button" style="display: none;">Uitloggen</button>
+      </div>
+
+      <!-- ADMIN-PANEL -->
+      <div id="admin-panel" style="display: none; margin-top: 20px;">
+        <h2>Update Ranking</h2>
+        <label>Wins nodig voor 1 point: </label>
+        <input type="number" id="winsNeeded" value="5">
+
+        <div id="players-update" style="margin-top: 20px;">
+          <!-- Hier vullen we dynamisch de spelerlijst in met invoervelden voor 'winsTonight' -->
+        </div>
+        <button id="update-ranking-button" style="margin-top: 20px;">Opslaan</button>
+      </div>
     
     <script src="script-ranking.js"></script>
 </body>
